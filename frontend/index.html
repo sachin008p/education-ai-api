@@ -1,264 +1,605 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduAI – Your Intelligent Learning Assistant</title>
-  <meta name="description" content="Ask any education question and get AI-powered answers instantly. Supports single and bulk queries." />
+  <title>EduAI – Intelligent Learning Platform</title>
+  <meta name="description" content="AI-powered education assistant. Ask questions, run bulk queries, browse history and tune your prompt — all in one place." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Background orbs -->
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-orb orb-3"></div>
+  <!-- ═══════════════════════════════════════════
+       CANVAS PARTICLES
+  ══════════════════════════════════════════════ -->
+  <canvas id="particles-canvas"></canvas>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <!-- ═══════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M12 2L2 7l10 5 10-5-10-5z"/>
             <path d="M2 17l10 5 10-5"/>
             <path d="M2 12l10 5 10-5"/>
           </svg>
         </div>
-        <span class="logo-text">EduAI</span>
+        <span class="sidebar-logo-text">EduAI</span>
       </div>
-      <nav class="nav">
-        <button class="nav-btn active" id="nav-single" onclick="switchTab('single')">Single Query</button>
-        <button class="nav-btn" id="nav-bulk" onclick="switchTab('bulk')">Bulk Query</button>
-        <button class="nav-btn" id="nav-history" onclick="switchTab('history')">History</button>
-      </nav>
-    </div>
-  </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      AI-Powered Education Assistant
-    </div>
-    <h1 class="hero-title">
-      Learn Anything,<br />
-      <span class="gradient-text">Ask Everything</span>
-    </h1>
-    <p class="hero-subtitle">
-      Get instant, intelligent answers to all your educational questions — from exam tips to complex concepts.
-    </p>
-  </section>
-
-  <!-- MAIN CONTENT -->
-  <main class="main">
-
-    <!-- ── SINGLE QUERY TAB ── -->
-    <div class="tab-panel active" id="tab-single">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard" onclick="navigate('dashboard')">
+          <span class="nav-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <line x1="12" y1="17" x2="12.01" y2="17"/>
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
             </svg>
-          </div>
-          <div>
-            <h2 class="card-title">Ask a Question</h2>
-            <p class="card-subtitle">Get an AI-powered educational answer instantly</p>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label class="input-label" for="single-input">Your Question</label>
-          <div class="textarea-wrapper">
-            <textarea
-              id="single-input"
-              class="textarea"
-              placeholder="e.g. How much should I score in each subject to pass CA Final?"
-              rows="4"
-            ></textarea>
-            <span class="textarea-count" id="single-count">0 / 500</span>
-          </div>
-        </div>
-
-        <div class="example-chips">
-          <span class="chips-label">Try:</span>
-          <button class="chip" onclick="setExample('How can I improve my concentration while studying?')">Study tips</button>
-          <button class="chip" onclick="setExample('Explain the concept of supply and demand in economics')">Economics</button>
-          <button class="chip" onclick="setExample('What is the best way to prepare for board exams?')">Board exams</button>
-        </div>
-
-        <button class="btn-primary" id="ask-btn" onclick="askSingle()">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-          Ask EduAI
+          </span>
+          <span class="nav-label">Dashboard</span>
+          <span class="nav-indicator"></span>
         </button>
 
-        <!-- Response area -->
-        <div class="response-area hidden" id="single-response">
-          <div class="response-header">
-            <div class="response-indicator">
-              <div class="ai-avatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                  <path d="M2 17l10 5 10-5"/>
-                  <path d="M2 12l10 5 10-5"/>
-                </svg>
-              </div>
-              <span>EduAI Response</span>
-            </div>
-            <button class="copy-btn" onclick="copyResponse('single-response-text')" title="Copy response">
+        <button class="nav-item" data-view="ask" onclick="navigate('ask')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </span>
+          <span class="nav-label">Ask AI</span>
+          <span class="nav-indicator"></span>
+        </button>
+
+        <button class="nav-item" data-view="bulk" onclick="navigate('bulk')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </span>
+          <span class="nav-label">Bulk Query</span>
+          <span class="nav-indicator"></span>
+        </button>
+
+        <button class="nav-item" data-view="history" onclick="navigate('history')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </span>
+          <span class="nav-label">History</span>
+          <span class="nav-indicator"></span>
+        </button>
+
+        <button class="nav-item" data-view="prompt" onclick="navigate('prompt')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </span>
+          <span class="nav-label">Prompt Editor</span>
+          <span class="nav-indicator"></span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <!-- Theme toggle -->
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <span class="theme-icon theme-icon--dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </span>
+        <span class="theme-icon theme-icon--light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+        <span class="theme-label">Theme</span>
+      </button>
+
+      <!-- Status dot -->
+      <div class="status-pill" id="status-pill">
+        <span class="status-dot" id="status-dot"></span>
+        <span class="status-text" id="status-text">Checking…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════
+       MOBILE TOP BAR
+  ══════════════════════════════════════════════ -->
+  <div class="mobile-bar">
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="mobile-logo">
+      <div class="sidebar-logo-mark sidebar-logo-mark--sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span>EduAI</span>
+    </div>
+    <button class="theme-toggle theme-toggle--sm" onclick="toggleTheme()">
+      <span class="theme-icon theme-icon--dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+      <span class="theme-icon theme-icon--light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════ -->
+  <main class="main-content" id="main-content">
+
+    <!-- ── OFFLINE BANNER ── -->
+    <div class="offline-banner hidden" id="offline-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+      API server is offline — make sure <code>python run.py</code> is running on port 5000.
+    </div>
+
+    <!-- ════════════════════════════════════════
+         VIEW: DASHBOARD
+    ═════════════════════════════════════════ -->
+    <section class="view active" id="view-dashboard">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Dashboard</h1>
+          <p class="view-subtitle">Your learning command centre</p>
+        </div>
+        <button class="btn-icon-round" onclick="refreshDashboard()" title="Refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card stat-card--blue">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-total">—</div>
+            <div class="stat-label">Total Questions</div>
+          </div>
+          <div class="stat-bg-icon">💬</div>
+        </div>
+
+        <div class="stat-card stat-card--green">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-today">—</div>
+            <div class="stat-label">Today's Queries</div>
+          </div>
+          <div class="stat-bg-icon">📅</div>
+        </div>
+
+        <div class="stat-card stat-card--purple">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-bulk">—</div>
+            <div class="stat-label">Bulk Runs</div>
+          </div>
+          <div class="stat-bg-icon">⚡</div>
+        </div>
+
+        <div class="stat-card stat-card--amber">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-single">—</div>
+            <div class="stat-label">Single Queries</div>
+          </div>
+          <div class="stat-bg-icon">🎯</div>
+        </div>
+      </div>
+
+      <!-- Quick ask + Recent history side by side -->
+      <div class="dashboard-grid">
+        <!-- Quick ask -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon card-icon--blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Quick Ask</h2>
+              <p class="card-subtitle">Ask a question right here</p>
+            </div>
+          </div>
+          <textarea id="dash-input" class="textarea" placeholder="What topic can I help you with?" rows="3"></textarea>
+          <button class="btn-primary" onclick="dashboardAsk()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Ask EduAI
+          </button>
+          <div class="response-area hidden" id="dash-response">
+            <div class="response-header">
+              <div class="response-indicator">
+                <div class="ai-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
+                EduAI Response
+              </div>
+              <button class="copy-btn" onclick="copyText('dash-response-text')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+            <div class="response-text markdown-body" id="dash-response-text"></div>
+          </div>
+          <div class="error-area hidden" id="dash-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="dash-error-text"></span></div>
+        </div>
+
+        <!-- Recent history from MongoDB -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon card-icon--purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Recent Activity</h2>
+              <p class="card-subtitle">Last 5 questions from MongoDB</p>
+            </div>
+          </div>
+          <div id="recent-list" class="recent-list">
+            <div class="skeleton-list">
+              <div class="skeleton-item"></div>
+              <div class="skeleton-item"></div>
+              <div class="skeleton-item"></div>
+            </div>
+          </div>
+          <button class="btn-ghost" onclick="navigate('history')">View full history →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         VIEW: ASK AI
+    ═════════════════════════════════════════ -->
+    <section class="view" id="view-ask">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Ask AI</h1>
+          <p class="view-subtitle">Get expert educational answers instantly</p>
+        </div>
+      </div>
+
+      <div class="ask-layout">
+        <!-- Left: Input panel -->
+        <div class="card ask-card">
+          <!-- Subject tags -->
+          <div class="subject-tags">
+            <span class="subject-tag-label">Topic:</span>
+            <button class="subject-tag" onclick="setSubject('Mathematics')">📐 Math</button>
+            <button class="subject-tag" onclick="setSubject('Science')">🔬 Science</button>
+            <button class="subject-tag" onclick="setSubject('History')">📜 History</button>
+            <button class="subject-tag" onclick="setSubject('Programming')">💻 Code</button>
+            <button class="subject-tag" onclick="setSubject('Language')">📖 Language</button>
+            <button class="subject-tag" onclick="setSubject('Commerce & Finance')">💰 Finance</button>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="ask-input">Your Question</label>
+            <div class="textarea-wrapper">
+              <textarea
+                id="ask-input"
+                class="textarea textarea--lg"
+                placeholder="e.g. Explain Newton's second law of motion with examples…"
+                rows="5"
+              ></textarea>
+              <span class="textarea-count" id="ask-count">0 / 1000</span>
+            </div>
+          </div>
+
+          <!-- Chips -->
+          <div class="example-chips">
+            <span class="chips-label">Try:</span>
+            <button class="chip" onclick="setAskExample('How can I improve my concentration while studying?')">Study tips</button>
+            <button class="chip" onclick="setAskExample('Explain the concept of supply and demand')">Economics</button>
+            <button class="chip" onclick="setAskExample('What is the best strategy for board exam preparation?')">Exam prep</button>
+            <button class="chip" onclick="setAskExample('Explain recursion in programming with examples')">Coding</button>
+          </div>
+
+          <div class="ask-actions">
+            <button class="btn-primary" id="ask-btn" onclick="askSingle()">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              Ask EduAI
+              <kbd class="kbd-hint">Ctrl+↵</kbd>
+            </button>
+            <button class="btn-voice" id="voice-btn" onclick="toggleVoice()" title="Voice input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </button>
+            <button class="btn-clear-input" onclick="clearAsk()" title="Clear">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
               </svg>
             </button>
           </div>
-          <div class="response-text" id="single-response-text"></div>
+
+          <div class="voice-status hidden" id="voice-status">
+            <span class="voice-dot"></span> Listening…
+          </div>
         </div>
 
-        <!-- Error area -->
-        <div class="error-area hidden" id="single-error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <span id="single-error-text"></span>
+        <!-- Right: Response panel -->
+        <div class="response-panel">
+          <div class="response-area response-area--full hidden" id="ask-response">
+            <div class="response-header">
+              <div class="response-indicator">
+                <div class="ai-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/>
+                  </svg>
+                </div>
+                EduAI Response
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="copy-btn" onclick="copyText('ask-response-text')" title="Copy">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="response-text markdown-body" id="ask-response-text"></div>
+
+            <!-- Follow-up suggestions -->
+            <div class="followup-section" id="followup-section">
+              <div class="followup-label">💡 Ask a follow-up:</div>
+              <div class="followup-chips" id="followup-chips"></div>
+            </div>
+          </div>
+
+          <div class="empty-response-state" id="ask-empty-state">
+            <div class="empty-illustration">
+              <svg viewBox="0 0 120 100" fill="none">
+                <circle cx="60" cy="40" r="30" stroke="var(--clr-border)" stroke-width="2"/>
+                <path d="M50 38a5 5 0 0 1 10 0c0 4-5 5-5 5" stroke="var(--clr-text-dim)" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="60" cy="52" r="1.5" fill="var(--clr-text-dim)"/>
+                <path d="M36 72 Q60 90 84 72" stroke="var(--clr-border)" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p class="empty-title">Ready to answer</p>
+            <p class="empty-sub">Type a question or use voice input to get started</p>
+          </div>
+
+          <div class="error-area hidden" id="ask-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="ask-error-text"></span>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ── BULK QUERY TAB ── -->
-    <div class="tab-panel" id="tab-bulk">
+    <!-- ════════════════════════════════════════
+         VIEW: BULK QUERY
+    ═════════════════════════════════════════ -->
+    <section class="view" id="view-bulk">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Bulk Query</h1>
+          <p class="view-subtitle">Process multiple questions concurrently</p>
+        </div>
+      </div>
+
       <div class="card">
-        <div class="card-header">
-          <div class="card-icon card-icon--purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="8" y1="6" x2="21" y2="6"/>
-              <line x1="8" y1="12" x2="21" y2="12"/>
-              <line x1="8" y1="18" x2="21" y2="18"/>
-              <line x1="3" y1="6" x2="3.01" y2="6"/>
-              <line x1="3" y1="12" x2="3.01" y2="12"/>
-              <line x1="3" y1="18" x2="3.01" y2="18"/>
+        <div class="bulk-toolbar">
+          <span class="bulk-count-badge" id="bulk-count-badge">1 question</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-sm" onclick="addBulkQuestion()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Add Question
+            </button>
+            <button class="btn-sm btn-sm--ghost" onclick="clearBulk()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+              Clear All
+            </button>
+          </div>
+        </div>
+
+        <div class="bulk-questions" id="bulk-questions"></div>
+
+        <!-- Progress bar -->
+        <div class="bulk-progress hidden" id="bulk-progress">
+          <div class="bulk-progress-bar" id="bulk-progress-bar"></div>
+          <span class="bulk-progress-text" id="bulk-progress-text">0 / 0 completed</span>
+        </div>
+
+        <div class="bulk-actions">
+          <button class="btn-primary btn-primary--purple" id="bulk-btn" onclick="askBulk()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
-          </div>
-          <div>
-            <h2 class="card-title">Bulk Questions</h2>
-            <p class="card-subtitle">Ask multiple questions at once — processed concurrently</p>
-          </div>
+            Run Bulk Query
+          </button>
+          <button class="btn-download hidden" id="download-btn" onclick="downloadAnswers()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download .txt
+          </button>
         </div>
 
-        <div class="bulk-questions" id="bulk-questions">
-          <div class="bulk-question-item" data-index="0">
-            <div class="bulk-question-header">
-              <span class="bulk-q-label">Q1</span>
-              <button class="remove-btn hidden" onclick="removeBulkQuestion(0)" title="Remove">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
-            <textarea class="textarea textarea--sm" placeholder="Enter your first question..." rows="2"></textarea>
-          </div>
-        </div>
-
-        <button class="btn-add" onclick="addBulkQuestion()" id="add-q-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
-          </svg>
-          Add Question
-        </button>
-
-        <button class="btn-primary btn-primary--purple" id="bulk-ask-btn" onclick="askBulk()">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
-          Run Bulk Query
-        </button>
-
-        <!-- Bulk responses -->
         <div class="bulk-responses hidden" id="bulk-responses"></div>
-
-        <!-- Error area -->
         <div class="error-area hidden" id="bulk-error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           <span id="bulk-error-text"></span>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ── HISTORY TAB ── -->
-    <div class="tab-panel" id="tab-history">
+    <!-- ════════════════════════════════════════
+         VIEW: HISTORY
+    ═════════════════════════════════════════ -->
+    <section class="view" id="view-history">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">History</h1>
+          <p class="view-subtitle">All queries stored in MongoDB</p>
+        </div>
+      </div>
+
       <div class="card">
-        <div class="card-header">
-          <div class="card-icon card-icon--green">
+        <!-- Search & filter bar -->
+        <div class="history-toolbar">
+          <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 3h18v18H3z" rx="2"/>
-              <path d="M3 9h18"/><path d="M9 21V9"/>
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
+            <input type="text" id="history-search" class="search-input" placeholder="Search questions…" oninput="historySearchDebounced()" />
+            <button class="search-clear hidden" id="search-clear" onclick="clearHistorySearch()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>
-          <div>
-            <h2 class="card-title">Session History</h2>
-            <p class="card-subtitle">Your questions and answers from this session</p>
+          <div class="filter-pills">
+            <button class="filter-pill active" data-filter="" onclick="setHistoryFilter('')">All</button>
+            <button class="filter-pill" data-filter="single" onclick="setHistoryFilter('single')">Single</button>
+            <button class="filter-pill" data-filter="bulk" onclick="setHistoryFilter('bulk')">Bulk</button>
           </div>
-          <button class="btn-clear" onclick="clearHistory()" id="clear-history-btn">Clear All</button>
         </div>
 
         <div id="history-list" class="history-list">
-          <div class="history-empty" id="history-empty">
-            <div class="history-empty-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-            </div>
-            <p>No history yet. Start asking questions!</p>
+          <div class="skeleton-list">
+            <div class="skeleton-item skeleton-item--lg"></div>
+            <div class="skeleton-item skeleton-item--lg"></div>
+            <div class="skeleton-item skeleton-item--lg"></div>
           </div>
         </div>
+
+        <!-- Pagination -->
+        <div class="pagination hidden" id="pagination">
+          <button class="page-btn" id="page-prev" onclick="historyPage(-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="page-info" id="page-info">1 / 1</span>
+          <button class="page-btn" id="page-next" onclick="historyPage(1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
 
-  </main>
+    <!-- ════════════════════════════════════════
+         VIEW: PROMPT EDITOR
+    ═════════════════════════════════════════ -->
+    <section class="view" id="view-prompt">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Prompt Editor</h1>
+          <p class="view-subtitle">Edit the AI system prompt stored in MongoDB</p>
+        </div>
+      </div>
 
-  <!-- LOADING OVERLAY -->
+      <div class="card">
+        <div class="prompt-info">
+          <div class="prompt-info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <p>The template is stored as <code>Education_Prompt</code> in MongoDB. You <strong>must</strong> keep the <code class="placeholder-tag">&#123;&#123;userInput&#125;&#125;</code> placeholder — it gets replaced with the user's question at runtime.</p>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="prompt-editor">Prompt Template</label>
+          <div class="code-editor-wrapper">
+            <textarea id="prompt-editor" class="textarea textarea--code" rows="10" placeholder="Loading…" spellcheck="false"></textarea>
+          </div>
+          <p class="input-hint" id="prompt-hint">Must contain <code>&#123;&#123;userInput&#125;&#125;</code></p>
+        </div>
+
+        <div class="prompt-actions">
+          <button class="btn-primary btn-primary--green" id="save-prompt-btn" onclick="savePrompt()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save to MongoDB
+          </button>
+          <button class="btn-ghost" onclick="loadPrompt()">↺ Reload from DB</button>
+        </div>
+
+        <div class="error-area hidden" id="prompt-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="prompt-error-text"></span>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main-content -->
+
+  <!-- ═══════════════════════════════════════════
+       LOADING SPINNER
+  ══════════════════════════════════════════════ -->
   <div class="loading-overlay hidden" id="loading-overlay">
     <div class="loading-box">
       <div class="spinner">
         <div class="spinner-ring"></div>
         <div class="spinner-ring spinner-ring--2"></div>
-        <div class="spinner-logo">
+        <div class="spinner-core">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2L2 7l10 5 10-5-10-5z"/>
           </svg>
         </div>
       </div>
-      <p class="loading-text" id="loading-text">Thinking...</p>
-      <p class="loading-sub">EduAI is generating your answer</p>
+      <p class="loading-text" id="loading-text">Thinking…</p>
+      <p class="loading-sub" id="loading-sub">EduAI is generating your answer</p>
     </div>
   </div>
 
-  <!-- TOAST -->
+  <!-- ═══════════════════════════════════════════
+       TOAST
+  ══════════════════════════════════════════════ -->
   <div class="toast hidden" id="toast">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polyline points="20 6 9 17 4 12"/>
     </svg>
-    <span id="toast-text">Copied!</span>
+    <span id="toast-text">Done!</span>
   </div>
 
+  <!-- marked.js for markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
