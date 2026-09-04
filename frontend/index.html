@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduAI – Your Intelligent Learning Assistant</title>
+  <meta name="description" content="Ask any education question and get AI-powered answers instantly. Supports single and bulk queries." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="logo-text">EduAI</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" id="nav-single" onclick="switchTab('single')">Single Query</button>
+        <button class="nav-btn" id="nav-bulk" onclick="switchTab('bulk')">Bulk Query</button>
+        <button class="nav-btn" id="nav-history" onclick="switchTab('history')">History</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      AI-Powered Education Assistant
+    </div>
+    <h1 class="hero-title">
+      Learn Anything,<br />
+      <span class="gradient-text">Ask Everything</span>
+    </h1>
+    <p class="hero-subtitle">
+      Get instant, intelligent answers to all your educational questions — from exam tips to complex concepts.
+    </p>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ── SINGLE QUERY TAB ── -->
+    <div class="tab-panel active" id="tab-single">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">Ask a Question</h2>
+            <p class="card-subtitle">Get an AI-powered educational answer instantly</p>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="single-input">Your Question</label>
+          <div class="textarea-wrapper">
+            <textarea
+              id="single-input"
+              class="textarea"
+              placeholder="e.g. How much should I score in each subject to pass CA Final?"
+              rows="4"
+            ></textarea>
+            <span class="textarea-count" id="single-count">0 / 500</span>
+          </div>
+        </div>
+
+        <div class="example-chips">
+          <span class="chips-label">Try:</span>
+          <button class="chip" onclick="setExample('How can I improve my concentration while studying?')">Study tips</button>
+          <button class="chip" onclick="setExample('Explain the concept of supply and demand in economics')">Economics</button>
+          <button class="chip" onclick="setExample('What is the best way to prepare for board exams?')">Board exams</button>
+        </div>
+
+        <button class="btn-primary" id="ask-btn" onclick="askSingle()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Ask EduAI
+        </button>
+
+        <!-- Response area -->
+        <div class="response-area hidden" id="single-response">
+          <div class="response-header">
+            <div class="response-indicator">
+              <div class="ai-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <span>EduAI Response</span>
+            </div>
+            <button class="copy-btn" onclick="copyResponse('single-response-text')" title="Copy response">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+          <div class="response-text" id="single-response-text"></div>
+        </div>
+
+        <!-- Error area -->
+        <div class="error-area hidden" id="single-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="single-error-text"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BULK QUERY TAB ── -->
+    <div class="tab-panel" id="tab-bulk">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon card-icon--purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">Bulk Questions</h2>
+            <p class="card-subtitle">Ask multiple questions at once — processed concurrently</p>
+          </div>
+        </div>
+
+        <div class="bulk-questions" id="bulk-questions">
+          <div class="bulk-question-item" data-index="0">
+            <div class="bulk-question-header">
+              <span class="bulk-q-label">Q1</span>
+              <button class="remove-btn hidden" onclick="removeBulkQuestion(0)" title="Remove">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+            <textarea class="textarea textarea--sm" placeholder="Enter your first question..." rows="2"></textarea>
+          </div>
+        </div>
+
+        <button class="btn-add" onclick="addBulkQuestion()" id="add-q-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+          Add Question
+        </button>
+
+        <button class="btn-primary btn-primary--purple" id="bulk-ask-btn" onclick="askBulk()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          Run Bulk Query
+        </button>
+
+        <!-- Bulk responses -->
+        <div class="bulk-responses hidden" id="bulk-responses"></div>
+
+        <!-- Error area -->
+        <div class="error-area hidden" id="bulk-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="bulk-error-text"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HISTORY TAB ── -->
+    <div class="tab-panel" id="tab-history">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon card-icon--green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3h18v18H3z" rx="2"/>
+              <path d="M3 9h18"/><path d="M9 21V9"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">Session History</h2>
+            <p class="card-subtitle">Your questions and answers from this session</p>
+          </div>
+          <button class="btn-clear" onclick="clearHistory()" id="clear-history-btn">Clear All</button>
+        </div>
+
+        <div id="history-list" class="history-list">
+          <div class="history-empty" id="history-empty">
+            <div class="history-empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <p>No history yet. Start asking questions!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay hidden" id="loading-overlay">
+    <div class="loading-box">
+      <div class="spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring spinner-ring--2"></div>
+        <div class="spinner-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          </svg>
+        </div>
+      </div>
+      <p class="loading-text" id="loading-text">Thinking...</p>
+      <p class="loading-sub">EduAI is generating your answer</p>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast hidden" id="toast">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    <span id="toast-text">Copied!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
