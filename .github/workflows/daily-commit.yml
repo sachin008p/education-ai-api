@@ -1,33 +1,12 @@
 name: Daily Auto Commit
 
 on:
-  schedule:
-    # Runs daily at a different time depending on when GitHub schedules it, 
-    # but we will schedule it for 00:00 UTC (around 5:30 AM IST) daily.
-    - cron: '0 0 * * *'
-  workflow_dispatch: # Allows manual trigger as well
+  workflow_dispatch: # Allows manual trigger only
 
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
-      - name: Random Delay
-        run: |
-          # Add a random delay between 1 to 60 minutes so the commit time changes every day
-          sleep $(( (RANDOM % 3600) + 1 ))
-
-      - name: Make Changes and Commit
-        run: |
-          echo "Automated activity update on $(date)" >> activity.log
-          
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
-          
-          git add activity.log
-          git commit -m "Automated daily activity update: $(date +'%Y-%m-%d')"
-          
-          git push
