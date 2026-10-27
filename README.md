@@ -27,7 +27,7 @@ python seed.py
 python run.py
 ```
 
-The server runs at `http://127.0.0.1:5000`.
+The server runs at `http://127.0.0.1:5000`. You can open this address directly in your browser to access the full interactive Web UI dashboard.
 
 ## API
 

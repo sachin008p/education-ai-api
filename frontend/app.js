@@ -1,8 +1,9 @@
 // ─────────────────────────────────────────────────────────────
 //  EduAI Frontend  –  app.js  (Full Rebuild v2)
 // ─────────────────────────────────────────────────────────────
-
-const API = 'http://127.0.0.1:5000/api';
+const API = (window.location.protocol.startsWith('http') && window.location.origin)
+  ? `${window.location.origin}/api`
+  : 'http://127.0.0.1:5000/api';
 
 // ── State ─────────────────────────────────────────────────────
 const state = {
